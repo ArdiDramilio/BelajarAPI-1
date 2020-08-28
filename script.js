@@ -1,0 +1,43 @@
+function searchMovie(){
+    $('#movie-list').html('')
+    $.ajax({
+        url:'http://omdbapi.com',
+        type:'get',
+        dataType:'json',
+        data:{
+            'apikey':'e98d2607',
+            's':  $('#search-input').val()
+        },
+        success: function(result){
+            if(result.Response === "True"){
+                let movies = result.Search;
+                $.each(movies, function(i, data){
+                    $('#movie-list').append(`
+                    <div class="col-md-4">
+                    <div class="card mb-3" style="width: 18rem;">
+                        <img src="`+ data.Poster+`" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <h5 class="card-title">`+data.Title+`</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">`+data.Year+`</h6>
+                          <a href="#" class="card-link">See Details</a>
+                        </div>
+                    </div>
+                    </div>
+                    `);
+                });
+            }else{
+                $('#movie-list').html('<h1>Movie Not Found</h1>')
+            }
+        }
+    });
+}
+
+$('#Btn-Search').on('click',function(){
+    searchMovie();
+});
+
+$('#search-input').on('keyup',function(e){
+    if(e.keyCode === 13){
+        searchMovie();
+    }
+})
